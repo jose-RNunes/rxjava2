@@ -98,13 +98,7 @@ class StarWarsRepositoryImp constructor(private val apiService: ApiService):Star
     }
 
     /**
-     * Exemplo utilizando o operador FlatMapIterable, Take,FlatMap, Zip, Just, FromIterable,Map e o toList
-     * O operador FlatMapIterable é utlizado para iterar em uma lista
-     * O take foi utilizado para trazer somente os 3 primeiros elementos da lista
-     * O FlatMap é utlizado para transformar a stream em outra stream
-     * O Zip é utlizado para transfor um conjunto de streams e um nova stream
-     * O toList transforma todos os objetos iterados em uma lista
-     * O zip foi utilizado para criar um novo objeto o PeopleFilm que contém um personagem e a lista de filmes que ele participou.
+     * Exemplo de criação de um Observable que pode ser utlizado para fazer um cache     *
      * @return retorna uma lista com os personagens com seus filmes
      * */
     override fun cachePeople(people: People):Observable<People> {
