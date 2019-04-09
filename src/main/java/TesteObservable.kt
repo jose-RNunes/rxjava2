@@ -1,5 +1,4 @@
 
-import model.People
 import source.ApiService
 import source.RetrofitConfig
 import source.StarWarsRepositoryImp
@@ -11,8 +10,7 @@ class TesteObservable {
         @JvmStatic
         fun main(args: Array<String>) {
             val apiService = RetrofitConfig.getApiService()
-
-
+            getPeopleMale(apiService)
         }
 
         fun cachePeople(apiService:ApiService){

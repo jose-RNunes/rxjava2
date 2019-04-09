@@ -12,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Path
+import java.util.concurrent.TimeUnit
 
 
 class RetrofitConfig {
@@ -32,10 +33,16 @@ class RetrofitConfig {
         fun getApiService(): ApiService = apiService
 
         private fun okHttp():OkHttpClient{
+
+
             var logging = HttpLoggingInterceptor()
             logging.level = HttpLoggingInterceptor.Level.BODY
             return OkHttpClient.Builder()
-                .addInterceptor(logging).build()
+                .addInterceptor(logging)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(40, TimeUnit.SECONDS)
+                .build()
         }
 
     }
