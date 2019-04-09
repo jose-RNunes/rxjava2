@@ -47,9 +47,6 @@ class RetrofitConfig {
 
     }
 
-
-
-
 }
 
 interface ApiService {

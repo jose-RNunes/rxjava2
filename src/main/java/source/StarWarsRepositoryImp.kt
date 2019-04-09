@@ -12,19 +12,37 @@ class StarWarsRepositoryImp constructor(private val apiService: ApiService):Star
 
     private val map = mutableMapOf<String,People>()
 
-    override fun getPeople(idPeople:Int): Observable<People> {//Exemplo de Observable
+    /**
+     * Exemplo de um Observable que trabalha na Thread de io.
+    * @param idPeople passado é utilizado para trazer somente 1 personagem
+     * @return retorna o personagem solicitado
+    * */
+    override fun getPeople(idPeople:Int): Observable<People> {
         return apiService.getPeople(idPeople).
             subscribeOn(Schedulers.io()).
             observeOn(Schedulers.io())
     }
 
+    /**
+     * Exemplo utilizando o operador Map, que é utilizado para transformar objetos
+     * Nesse caso ele transforma a classe Peoples que contém um atributo chamado results que retorna a
+     * lista de personagem da pagina indicada.
+     * @return retorna uma lista com os personagens
+     * */
     override fun getPeoples(): Observable<List<People>>{//Exemplo de Map Operator
         return apiService.getPeoples().map {
             it.results
         }
     }
 
-    override fun getPeoplesMale():Observable<List<People>>{//Exemplo FlatMapIterable e Filter
+    /**
+     * Exemplo utilizando o operador FlatMapIterable, Filter e o toList
+     * O operador FlatMapIterable é utlizado para iterar em uma lista
+     * O filter foi utlizado para filtrar  objeto gerado pela a lista trazendo somente os personagens de sexo Masculino
+     * O toList transforma todos os objetos iterados em uma lista
+     * @return retorna uma lista com os personagens
+     * */
+    override fun getPeoplesMale():Observable<List<People>>{
         return apiService.getPeoples().map {
             it.results
         }.flatMapIterable {
@@ -34,6 +52,16 @@ class StarWarsRepositoryImp constructor(private val apiService: ApiService):Star
         }.toList().toObservable()
     }
 
+    /**
+     * Exemplo utilizando o operador FlatMapIterable, Take,FlatMap, Zip, Just, FromIterable,Map e o toList
+     * O operador FlatMapIterable é utlizado para iterar em uma lista
+     * O take foi utilizado para trazer somente os 3 primeiros elementos da lista
+     * O FlatMap é utlizado para transformar a stream em outra stream
+     * O Zip é utlizado para transfor um conjunto de streams e um nova stream
+     * O toList transforma todos os objetos iterados em uma lista
+     * O zip foi utilizado para criar um novo objeto o PeopleFilm que contém um personagem e a lista de filmes que ele participou.
+     * @return retorna uma lista com os personagens com seus filmes
+     * */
     override fun getPeopleFilms():Observable<List<PeopleFilm>>{//Exemplo Tak e Zip
         return apiService.getPeoples().map {peoples->
             peoples.results
@@ -69,6 +97,16 @@ class StarWarsRepositoryImp constructor(private val apiService: ApiService):Star
         }
     }
 
+    /**
+     * Exemplo utilizando o operador FlatMapIterable, Take,FlatMap, Zip, Just, FromIterable,Map e o toList
+     * O operador FlatMapIterable é utlizado para iterar em uma lista
+     * O take foi utilizado para trazer somente os 3 primeiros elementos da lista
+     * O FlatMap é utlizado para transformar a stream em outra stream
+     * O Zip é utlizado para transfor um conjunto de streams e um nova stream
+     * O toList transforma todos os objetos iterados em uma lista
+     * O zip foi utilizado para criar um novo objeto o PeopleFilm que contém um personagem e a lista de filmes que ele participou.
+     * @return retorna uma lista com os personagens com seus filmes
+     * */
     override fun cachePeople(people: People):Observable<People> {
         return Observable.create { emitter ->
             try{
