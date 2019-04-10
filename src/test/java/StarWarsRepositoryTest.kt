@@ -1,6 +1,5 @@
 import io.reactivex.Observable
 import model.Film
-import model.Films
 import model.People
 import model.Peoples
 import org.junit.Assert.assertEquals
@@ -8,6 +7,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
@@ -28,6 +28,9 @@ class StarWarsRepositoryTest{
     @Mock
     lateinit var people: People
 
+    @Mock
+    lateinit var peoples :Peoples
+
     lateinit var starWarsRepository: StarWarsRepository
 
     @Before
@@ -38,10 +41,8 @@ class StarWarsRepositoryTest{
 
     @Test
     fun testGetPeople(){
-        Mockito.`when`(apiService.getPeople(1)).thenReturn(Observable.just(people))
-
-        val testObserver = starWarsRepository.getPeople(1).test()
-
+        Mockito.`when`(apiService.getPeople(anyInt())).thenReturn(Observable.just(people))
+        val testObserver = starWarsRepository.getPeople(anyInt()).test()
         testObserver.assertValueCount(1)
         testObserver.assertNoErrors()
         testObserver.assertComplete()
@@ -50,7 +51,12 @@ class StarWarsRepositoryTest{
 
     @Test
     fun testGetPeoples(){
-        Mockito.`when`(apiService.getPeoples()).thenReturn(Observable.just(mockPeoples()))
+        Mockito.`when`(peoples.results).thenReturn(ArrayList<People>(Arrays.asList(
+            People(name = "Luke Skywalker"),
+            People(name = "Darth Vader")
+        )))
+
+        Mockito.`when`(apiService.getPeoples()).thenReturn(Observable.just(peoples))
         val testObserver = starWarsRepository.getPeoples().test()
         testObserver.assertNoErrors()
         testObserver.assertValue {
@@ -61,20 +67,33 @@ class StarWarsRepositoryTest{
 
     @Test
     fun testGetPeopleMale(){
-        Mockito.`when`(apiService.getPeoples()).thenReturn(Observable.just(mockPeoples()))
-
+        Mockito.`when`(peoples.results).thenReturn(ArrayList<People>(Arrays.asList(
+            People(gender = "male"),
+            People(gender = "female"),
+            People(gender = "n/a"),
+            People(gender = "male")
+            )))
+        Mockito.`when`(apiService.getPeoples()).thenReturn(Observable.just(peoples))
         val testObserver = starWarsRepository.getPeoplesMale().test()
         testObserver.assertNoErrors()
         testObserver.assertValue {
-            list -> list.size == 3
+            list -> list.size == 2
         }
     }
 
     @Test
     fun testGetPeopleFilms(){
+        Mockito.`when`(peoples.results).thenReturn(ArrayList<People>(Arrays.asList(
+            People(name = "Luke Skywalker" ,
+                 films = Arrays.asList("https://swapi.co/api/films/2/",
+                                       "https://swapi.co/api/films/6/")),
+            People(name = "Darth Vader"),
+            People(name = "Leia Organa"),
+            People(name = "Owen Lars")
+        )))
         val mockFilm = Mockito.mock(Film::class.java)
         Mockito.`when`(mockFilm.title).thenReturn("The Empire Strikes Back")
-        Mockito.`when`(apiService.getPeoples()).thenReturn(Observable.just(mockPeoples()))
+        Mockito.`when`(apiService.getPeoples()).thenReturn(Observable.just(peoples))
         Mockito.`when`(apiService.getPeopleMovie(ArgumentMatchers.anyInt()))
             .thenReturn(Observable.just(mockFilm))
         val testObserver = starWarsRepository.getPeopleFilms().test()
@@ -89,25 +108,7 @@ class StarWarsRepositoryTest{
 
     @Test
     fun testGetFilmsPeople(){
-        Mockito.`when`(apiService.getMovies()).thenReturn(Observable.just(Films()))
 
     }
-
-
-   private fun mockPeoples() =
-        Peoples(0,"","",results =
-        ArrayList<People>(Arrays.asList(
-            People(name = "Luke Skywalker",
-                   gender = "male",
-                   films = Arrays.asList("https://swapi.co/api/films/2/",
-                                         "https://swapi.co/api/films/6/")),
-            People(name = "Darth Vader",gender = "male"),
-            People(name = "Leia Organa",gender = "female"),
-            People(name = "Owen Lars",gender = "male"),
-            People(name = "Beru Whitesun lars",gender = "female"),
-            People(name = "C-3PO",gender = "n/a"),
-            People(name = "R2-D2",gender = "n/a")
-        )))
-
 
 }
