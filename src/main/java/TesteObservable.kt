@@ -1,16 +1,9 @@
 
-import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
-import io.reactivex.internal.operators.observable.ObservableBlockingSubscribe.subscribe
-import org.reactivestreams.Subscriber
-import source.ApiService
 import source.RetrofitConfig
+import source.StarWarsRepository
 import source.StarWarsRepositoryImp
-import javax.swing.text.View
-import io.reactivex.observers.DisposableObserver
-
-
 
 
 class TesteObservable {
@@ -19,38 +12,33 @@ class TesteObservable {
         @JvmStatic
         fun main(args: Array<String>) {
             val apiService = RetrofitConfig.getApiService()
-            getPeoples(apiService)
+            val repository = StarWarsRepositoryImp(apiService)
+            getPeoples(repository)
         }
 
-        fun cachePeople(apiService:ApiService){
-            val repository = StarWarsRepositoryImp(apiService)
+        fun cachePeople(repository:StarWarsRepository){
             repository.getPeople(1).flatMap {people ->
                 repository.cachePeople(people)
             }.subscribe(getDisposableObserver())
         }
 
-        fun getFilmsPeople(apiService: ApiService){
-            val repository = StarWarsRepositoryImp(apiService)
+        fun getFilmsPeople(repository:StarWarsRepository){
             repository.getFilmsPeople().subscribe(getDisposableObserver())
         }
 
-        fun getPeopleFilms(apiService: ApiService){
-            val repository = StarWarsRepositoryImp(apiService)
+        fun getPeopleFilms(repository:StarWarsRepository){
             repository.getPeopleFilms().subscribe(getDisposableObserver())
         }
 
-        fun getPeopleMale(apiService: ApiService){
-            val repository = StarWarsRepositoryImp(apiService)
+        fun getPeopleMale(repository:StarWarsRepository){
             repository.getPeoplesMale().subscribe(getDisposableObserver())
         }
 
-        fun getPeople(apiService:ApiService){
-            val repository = StarWarsRepositoryImp(apiService)
+        fun getPeople(repository:StarWarsRepository){
             repository.getPeople(1).subscribe(getDisposableObserver())
         }
 
-        fun getPeoples(apiService: ApiService){
-            val repository = StarWarsRepositoryImp(apiService)
+        fun getPeoples(repository:StarWarsRepository){
             repository.getPeoples().subscribe(getDisposableObserver())
         }
 
