@@ -55,14 +55,14 @@ class StarWarsRepositoryImp constructor(private val apiService: ApiService):Star
     /**
      * Exemplo utilizando o operador FlatMapIterable, Take,FlatMap, Zip, Just, FromIterable,Map e o toList
      * O operador FlatMapIterable é utlizado para iterar em uma lista
-     * O take foi utilizado para trazer somente os 3 primeiros elementos da lista
+     * O Take foi utilizado para trazer somente os 3 primeiros elementos da lista
      * O FlatMap é utlizado para transformar a stream em outra stream
      * O Zip é utlizado para transfor um conjunto de streams e um nova stream
      * O toList transforma todos os objetos iterados em uma lista
      * O zip foi utilizado para criar um novo objeto o PeopleFilm que contém um personagem e a lista de filmes que ele participou.
      * @return retorna uma lista com os personagens com seus filmes
      * */
-    override fun getPeopleFilms():Observable<List<PeopleFilm>>{//Exemplo Tak e Zip
+    override fun getPeopleFilms():Observable<List<PeopleFilm>>{//Exemplo Take e Zip
         return apiService.getPeoples().map {peoples->
             peoples.results
         }.flatMapIterable {
@@ -74,7 +74,8 @@ class StarWarsRepositoryImp constructor(private val apiService: ApiService):Star
                     return@flatMap apiService.getPeopleMovie(urlFilm.getLastBitFromUrl().toInt())
                 }.map {
                        film-> film.title
-                }.toList().toObservable(), BiFunction<People,List<String>,PeopleFilm> { actor, films ->
+                }.toList()
+                 .toObservable(), BiFunction<People,List<String>,PeopleFilm> { actor, films ->
                     return@BiFunction PeopleFilm(actor.name,films)
                 })
         }.toList().toObservable()
@@ -89,7 +90,6 @@ class StarWarsRepositoryImp constructor(private val apiService: ApiService):Star
                 .flatMapIterable {film ->
                     film.characters
                 }.flatMap {character ->
-                    System.out.println("Return Url Character : $character")
                     apiService.getPeople(character.getLastBitFromUrl().toInt())
                 }.flatMap {
                     cachePeople(it)

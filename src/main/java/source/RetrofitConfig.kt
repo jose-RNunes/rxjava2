@@ -38,7 +38,7 @@ class RetrofitConfig {
             var logging = HttpLoggingInterceptor()
             logging.level = HttpLoggingInterceptor.Level.BODY
             return OkHttpClient.Builder()
-                .addInterceptor(logging)
+                //.addInterceptor(logging)
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(40, TimeUnit.SECONDS)

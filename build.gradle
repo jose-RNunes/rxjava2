@@ -12,6 +12,8 @@ repositories {
     mavenCentral()
 }
 
+
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -23,6 +25,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:3.8.0"
     testImplementation "org.mockito:mockito-inline:2.23.4"
     testImplementation "org.mockito:mockito-core:2.26.0"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
@@ -31,4 +34,5 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+
 }
