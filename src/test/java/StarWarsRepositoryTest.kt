@@ -1,5 +1,6 @@
 import io.reactivex.Observable
 import model.Film
+import model.Films
 import model.People
 import model.Peoples
 import org.junit.Assert.assertEquals
@@ -31,6 +32,9 @@ class StarWarsRepositoryTest{
     @Mock
     lateinit var peoples :Peoples
 
+    @Mock
+    lateinit var films: Films
+
     lateinit var starWarsRepository: StarWarsRepository
 
     @Before
@@ -40,9 +44,12 @@ class StarWarsRepositoryTest{
     }
 
     @Test
-    fun testGetPeople(){
+    fun shouldReturnPeopleWhenFilterAnyPeople(){
+        //Given
         Mockito.`when`(apiService.getPeople(anyInt())).thenReturn(Observable.just(people))
+        //When
         val testObserver = starWarsRepository.getPeople(anyInt()).test()
+        //Then
         testObserver.assertValueCount(1)
         testObserver.assertNoErrors()
         testObserver.assertComplete()
@@ -50,14 +57,16 @@ class StarWarsRepositoryTest{
     }
 
     @Test
-    fun testGetPeoples(){
+    fun shouldReturnPeopleWhenGetFirstPagesPeoples(){
+        //Given
         Mockito.`when`(peoples.results).thenReturn(ArrayList<People>(Arrays.asList(
             People(name = "Luke Skywalker"),
             People(name = "Darth Vader")
         )))
-
         Mockito.`when`(apiService.getPeoples()).thenReturn(Observable.just(peoples))
+        //When
         val testObserver = starWarsRepository.getPeoples().test()
+        //Then
         testObserver.assertNoErrors()
         testObserver.assertValue {
             list-> list[1].name == "Darth Vader"
@@ -66,7 +75,8 @@ class StarWarsRepositoryTest{
     }
 
     @Test
-    fun testGetPeopleMale(){
+    fun shouldReturnPeoplesMaleWhenGetFilterGenderMale(){
+        //Given
         Mockito.`when`(peoples.results).thenReturn(ArrayList<People>(Arrays.asList(
             People(gender = "male"),
             People(gender = "female"),
@@ -74,7 +84,9 @@ class StarWarsRepositoryTest{
             People(gender = "male")
             )))
         Mockito.`when`(apiService.getPeoples()).thenReturn(Observable.just(peoples))
+        //When
         val testObserver = starWarsRepository.getPeoplesMale().test()
+        //Then
         testObserver.assertNoErrors()
         testObserver.assertValue {
             list -> list.size == 2
@@ -82,7 +94,8 @@ class StarWarsRepositoryTest{
     }
 
     @Test
-    fun testGetPeopleFilms(){
+    fun shouldReturnPeoplesWithMovieNamesWhenGetUrlFromMovies(){
+        //Given
         Mockito.`when`(peoples.results).thenReturn(ArrayList<People>(Arrays.asList(
             People(name = "Luke Skywalker" ,
                  films = Arrays.asList("https://swapi.co/api/films/2/",
@@ -96,7 +109,9 @@ class StarWarsRepositoryTest{
         Mockito.`when`(apiService.getPeoples()).thenReturn(Observable.just(peoples))
         Mockito.`when`(apiService.getPeopleMovie(ArgumentMatchers.anyInt()))
             .thenReturn(Observable.just(mockFilm))
+        //When
         val testObserver = starWarsRepository.getPeopleFilms().test()
+        //Then
         testObserver.assertNoErrors()
         testObserver.assertValueCount(1)
         testObserver.assertValue {
@@ -107,8 +122,25 @@ class StarWarsRepositoryTest{
     }
 
     @Test
-    fun testGetFilmsPeople(){
+    fun shouldReturnPeoplesNamesWhenGetListFilms(){
+        //Given
+       Mockito.`when`(films.results).thenReturn(Arrays.asList(
+           Film(title = "A New Hope",characters = Arrays.asList(
+               "https://swapi.co/api/people/1/",
+               "https://swapi.co/api/people/2/"
+           ))
+       ))
+       Mockito.`when`(people.name).thenReturn("Luke Skywalker")
+       Mockito.`when`(apiService.getMovies()).thenReturn(Observable.just(films))
+       Mockito.`when`(apiService.getPeople(anyInt())).thenReturn(Observable.just(people))
 
+       //When
+       val testObserver = starWarsRepository.getFilmsPeople().test()
+
+        //Then
+       testObserver.assertNoErrors()
+       testObserver.assertValueCount(2)
+       testObserver.assertComplete()
     }
 
 }

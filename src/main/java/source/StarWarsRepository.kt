@@ -14,7 +14,7 @@ interface StarWarsRepository{
 
     fun getPeopleFilms():Observable<List<PeopleFilm>>
 
-    fun getFilmsPeople():Observable<People>
+    fun getFilmsPeople():Observable<String>
 
     fun cachePeople(people: People):Observable<People>
 }

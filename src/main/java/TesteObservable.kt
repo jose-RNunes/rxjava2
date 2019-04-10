@@ -13,7 +13,7 @@ class TesteObservable {
         fun main(args: Array<String>) {
             val apiService = RetrofitConfig.getApiService()
             val repository = StarWarsRepositoryImp(apiService)
-            getPeoples(repository)
+            getFilmsPeople(repository)
         }
 
         fun cachePeople(repository:StarWarsRepository){

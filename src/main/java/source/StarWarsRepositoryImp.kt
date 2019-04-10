@@ -3,7 +3,6 @@ package source
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import model.Film
 import model.People
 import model.PeopleFilm
 import util.getLastBitFromUrl
@@ -71,7 +70,7 @@ class StarWarsRepositoryImp constructor(private val apiService: ApiService):Star
              Observable.zip(
                 Observable.just(people),
                 Observable.fromIterable(people.films).flatMap {urlFilm->
-                    return@flatMap apiService.getPeopleMovie(urlFilm.getLastBitFromUrl().toInt())
+                     apiService.getPeopleMovie(urlFilm.getLastBitFromUrl().toInt())
                 }.map {
                        film-> film.title
                 }.toList()
@@ -81,7 +80,7 @@ class StarWarsRepositoryImp constructor(private val apiService: ApiService):Star
         }.toList().toObservable()
     }
 
-    override fun getFilmsPeople():Observable<People>{//Exemplo de FlatMap
+    override fun getFilmsPeople():Observable<String>{//Exemplo de FlatMap
         return apiService.getMovies().flatMap {films->
             Observable.
                 fromIterable(films.results).doOnNext {film ->
@@ -93,6 +92,8 @@ class StarWarsRepositoryImp constructor(private val apiService: ApiService):Star
                     apiService.getPeople(character.getLastBitFromUrl().toInt())
                 }.flatMap {
                     cachePeople(it)
+                }.map {
+                    people-> people.name
                 }
         }
     }
