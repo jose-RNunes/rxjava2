@@ -6,6 +6,7 @@ import io.reactivex.schedulers.Schedulers
 import model.People
 import model.PeopleFilm
 import util.getLastBitFromUrl
+import java.util.concurrent.TimeUnit
 
 class StarWarsRepositoryImp constructor(private val apiService: ApiService):StarWarsRepository{
 

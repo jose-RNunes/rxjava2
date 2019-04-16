@@ -1,3 +1,4 @@
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import model.Film
 import model.Films
@@ -35,7 +36,7 @@ class StarWarsRepositoryTest{
     @Mock
     lateinit var films: Films
 
-    lateinit var starWarsRepository: StarWarsRepository
+    private lateinit var starWarsRepository: StarWarsRepository
 
     @Before
     fun setUp(){
@@ -46,6 +47,7 @@ class StarWarsRepositoryTest{
     @Test
     fun shouldReturnPeopleWhenFilterAnyPeople(){
         //Given
+
         Mockito.`when`(apiService.getPeople(anyInt())).thenReturn(Observable.just(people))
         //When
         val testObserver = starWarsRepository.getPeople(anyInt()).test()
@@ -127,7 +129,8 @@ class StarWarsRepositoryTest{
        Mockito.`when`(films.results).thenReturn(Arrays.asList(
            Film(title = "A New Hope",characters = Arrays.asList(
                "https://swapi.co/api/people/1/",
-               "https://swapi.co/api/people/2/"
+               "https://swapi.co/api/people/2/",
+               "https://swapi.co/api/people/3/"
            ))
        ))
        Mockito.`when`(people.name).thenReturn("Luke Skywalker")
@@ -139,8 +142,10 @@ class StarWarsRepositoryTest{
 
         //Then
        testObserver.assertNoErrors()
-       testObserver.assertValueCount(2)
+       testObserver.assertValueCount(3)
        testObserver.assertComplete()
+
+       Mockito.verify(apiService,Mockito.times(3)).getPeople(anyInt())
     }
 
 }
