@@ -64,3 +64,8 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+build/kotlin/compileTestKotlin/caches-jvm/lookups/lookups.tab.values.s
+.gradle/4.10.3/fileHashes/fileHashes.bin
+.gradle/4.10.3/fileHashes/fileHashes.lock
+.gradle/4.10.3/taskHistory/taskHistory.bin
+*.lock

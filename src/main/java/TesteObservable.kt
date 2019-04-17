@@ -1,9 +1,18 @@
 
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import source.RetrofitConfig
 import source.StarWarsRepository
 import source.StarWarsRepositoryImp
+import java.util.stream.Collectors
+import java.util.stream.IntStream
+
+
 
 
 class TesteObservable {
@@ -13,7 +22,11 @@ class TesteObservable {
         fun main(args: Array<String>) {
             val apiService = RetrofitConfig.getApiService()
             val repository = StarWarsRepositoryImp(apiService)
+
+
             getFilmsPeople(repository)
+
+
         }
 
         fun cachePeople(repository:StarWarsRepository){
