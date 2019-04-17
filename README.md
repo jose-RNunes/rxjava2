@@ -6,24 +6,28 @@ RxJava - para fazer as chamadas de serviços da Api,
 Mockito - para testes,
 Kotlin.
 
-Para os testes é utlizado a classe Rule(RxImmediateSchedulerRule), para transformar as Threads de io, computation e newThread em Trampolim assim enviando o problema de chamadas simultaneas em testes unitários.
+Para os testes é utlizado a classe Rule(RxImmediateSchedulerRule), para transformar as Threads de io, computation e newThread em Trampolim assim evitando o problema de chamadas simultaneas.
 
 Para utlizar em projetos Android adicione a lib:
-    implementation "io.reactivex.rxjava2:rxandroid:$rxandroidVersion"
-E quando for atualizar a Thread de ui, será utilizado o Schedulers:AndroidSchedulers.mainThread() exemplo:
- /**
-     * Exemplo de um Observable que trabalha na Thread de io.
-    * @param idPeople passado é utilizado para trazer somente 1 personagem
-     * @return retorna o personagem solicitado
-    * */
+
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    
+    
+E quando for atualizar a Thread de ui, será utilizado o Schedulers:
+
+    AndroidSchedulers.mainThread() 
+
+Exemplo:
+
     override fun getPeople(idPeople:Int): Observable<People> {
         return apiService.getPeople(idPeople).
             subscribeOn(Schedulers.io()).
             observeOn(AndroidSchedulers.mainThread())
     }
   
-  E para testes no Android a classe RxImmediateSchedulerRule deve ficar como abaixo:
-  class RxImmediateSchedulerRule : TestRule {
+  E para testes no Android a classe RxImmediateSchedulerRule deve ser modificada:
+  
+    class RxImmediateSchedulerRule : TestRule {
 
     override fun apply(base: Statement, d: Description): Statement {
         return object : Statement() {
