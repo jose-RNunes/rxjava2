@@ -14,19 +14,22 @@ Para utlizar em projetos Android adicione a lib:
     
     
 E quando for atualizar a Thread de ui, será utilizado o Schedulers:
+```kotlin
 
     AndroidSchedulers.mainThread() 
+```
 
 Exemplo:
-
+```kotlin
     override fun getPeople(idPeople:Int): Observable<People> {
         return apiService.getPeople(idPeople).
             subscribeOn(Schedulers.io()).
             observeOn(AndroidSchedulers.mainThread())
     }
+```
   
   E para testes no Android a classe RxImmediateSchedulerRule deve ser modificada:
-  
+```kotlin
     class RxImmediateSchedulerRule : TestRule {
 
     override fun apply(base: Statement, d: Description): Statement {
@@ -47,7 +50,7 @@ Exemplo:
             }
         }
     }
-    
+```
     
     
 
